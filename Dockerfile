@@ -1,17 +1,8 @@
-FROM node:latest
-
-LABEL author="Bradley Mark"
-
+FROM node:12.18-alpine
 ENV NODE_ENV=production
-ENV PORT=3000
-
-COPY . /var/www
-WORKDIR /var/www
-
-VOLUME ["/var/www"]
-
-RUN npm install
-
-EXPOSE $PORT
-
-ENTRYPOINT ["npm", "start"]
+WORKDIR /usr/src/app
+COPY ["package.json", "package-lock.json*", "npm-shrinkwrap.json*", "./"]
+RUN npm install --production --silent && mv node_modules ../
+COPY . .
+EXPOSE 3000
+CMD ["npm", "start"]
